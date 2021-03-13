@@ -2,7 +2,10 @@
   "name": "clean-react",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "andre.pinheiro <andre.pinheiro@digitro.com>",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "andre <andre15ap>",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.20",
