@@ -5,7 +5,7 @@ export class HttpPostClentSpy implements HttpPostClient {
   url?: string;
   body?: any;
   response: HttpResponse = {
-    statusCode: HttpStatusCode.noContent,
+    statusCode: HttpStatusCode.ok,
   };
   async post(params: HttpPostParams): Promise<HttpResponse> {
     this.url = params.url;
