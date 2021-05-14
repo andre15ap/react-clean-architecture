@@ -3,6 +3,8 @@ import faker from 'faker';
 import { RemoteAuthentication } from '@/data/usecases/authentication/remote-authentication';
 import { HttpPostClentSpy } from '@/data/test/mock-http-client';
 import { mockAuthentication } from '@/domain/test/mock-authentication';
+import { InvalidCredentialsError } from '@/domain/erros/invalid-credentials-error';
+import { HttpStatusCode } from '@/data/protocols/http/http-post-response';
 
 type SutTypes = {
   sut: RemoteAuthentication;
@@ -25,13 +27,20 @@ describe('RemoteAuthentication', () => {
     await sut.auth(mockAuthentication());
     expect(httpPostClientSpy.url).toBe(url);
   });
-});
 
-describe('RemoteAuthentication', () => {
   test('Shold call HttpPostClient with correct body', async () => {
     const { sut, httpPostClientSpy } = makeSut();
     const authenticationParams = mockAuthentication();
     await sut.auth(authenticationParams);
     expect(httpPostClientSpy.body).toEqual(authenticationParams);
+  });
+
+  test('Shold throw InvalidCredentialsError if HttpPostClient returns 401', async () => {
+    const { sut, httpPostClientSpy } = makeSut();
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.unathorized,
+    };
+    const promise = sut.auth(mockAuthentication());
+    await expect(promise).rejects.toThrow(new InvalidCredentialsError());
   });
 });
